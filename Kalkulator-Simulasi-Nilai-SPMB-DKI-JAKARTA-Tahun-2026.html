@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalkulator Simulasi Nilai SPMB DKI JAKARTA Tahun 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --ink: #1c1917;
+    --ink-soft: #57534e;
+    --muted: #a8a29e;
+    --line: #e7e5e4;
+    --line-soft: #f5f5f4;
+    --primary: #0f766e;
+    --primary-dark: #134e4a;
+    --primary-soft: #ccfbf1;
+    --accent: #ca8a04;
+    --accent-soft: #fef9c3;
+    --danger: #b91c1c;
+  }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 32px 16px;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin: 0 0 .35rem;
+    color: var(--ink);
+  }
+  .subtitle {
+    font-size: .85rem;
+    color: var(--ink-soft);
+    margin: 0 0 1.75rem;
+  }
+  .field { margin-bottom: 1.1rem; }
+  label {
+    display: block;
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: .4rem;
+    letter-spacing: -0.005em;
+  }
+  label small {
+    font-weight: 400;
+    color: var(--muted);
+    font-size: .78rem;
+    margin-left: .25rem;
+  }
+  input, select {
+    width: 100%;
+    font-family: inherit;
+    font-size: .92rem;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: .65rem .85rem;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    appearance: none;
+  }
+  select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%2357534e' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right .9rem center;
+    padding-right: 2.25rem;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+  }
+  input[readonly] {
+    background: var(--line-soft);
+    color: var(--ink-soft);
+    cursor: default;
+  }
+  input:disabled, select:disabled {
+    background: var(--line-soft);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: .6rem; }
+  .hint { display: block; font-size: .76rem; color: var(--ink-soft); margin-top: .35rem; }
+
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0 .5rem;
+  }
+  .card {
+    padding: 1.1rem 1.25rem;
+    border-radius: 14px;
+    position: relative;
+  }
+  .card.primary {
+    background: var(--primary);
+    color: #ffffff;
+  }
+  .card.accent {
+    background: var(--accent-soft);
+    color: var(--ink);
+    border: 1px solid #fde68a;
+  }
+  .card-label {
+    font-size: .78rem;
+    font-weight: 600;
+    opacity: .9;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .card-value {
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin: .35rem 0 .25rem;
+  }
+  .card-value-sm {
+    font-size: .95rem;
+    margin: .5rem 0 .35rem;
+    line-height: 1.5;
+  }
+  .card-value-sm strong {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .card-note {
+    font-size: .72rem;
+    opacity: .85;
+    margin-top: .35rem;
+  }
+  .card-formula {
+    font-size: .72rem;
+    opacity: .85;
+    margin-top: .1rem;
+    font-style: italic;
+  }
+  .disclaimer {
+    font-size: .78rem;
+    color: var(--danger);
+    margin: .5rem 0 0;
+  }
+  @media (max-width: 600px) {
+    body { padding: 16px 8px; }
+    .wrap { padding: 22px; border-radius: 12px; }
+    .result-grid { grid-template-columns: 1fr; }
+    .card-value { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1 class="title">Kalkulator Simulasi Nilai SPMB DKI JAKARTA Tahun 2026</h1>
+  <p class="subtitle">Dimodifikasi dari https://sman81.sch.id/spmb dengan info awal dari Kep.Kadisdik DKI Jakarta No 261/2026</p>
+
+  <form onsubmit="return false">
+
+    <div class="field">
+      <label for="raporSekolah">Rapor Pendidikan Sekolah (Tanya ke Pihak Sekolah)</label>
+      <select id="raporSekolah">
+        <option value="">— Pilih Rapor Sekolah —</option>
+        <option value="baik">Baik</option>
+        <option value="sedang">Sedang</option>
+        <option value="kurang">Kurang</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="rapor">Nilai Rata-rata Rapor <small>(gunakan titik untuk desimal)</small></label>
+      <input type="number" min="0" max="100" step="0.01" id="rapor" placeholder="Contoh: 87.5" disabled>
+    </div>
+
+    <div class="field">
+      <label for="tka">Nilai Rata-rata TKA</label>
+      <input type="number" min="0" max="100" step="0.01" id="tka" placeholder="Contoh: 82.3" disabled>
+    </div>
+
+    <div class="field">
+      <label for="raporTka">Rapor-TKA (Rapor 70% + TKA 30%)</label>
+      <input type="text" id="raporTka" placeholder="—" readonly>
+    </div>
+
+    <div class="field">
+      <label>Peringkat dari Jumlah Siswa</label>
+      <div class="row-2">
+        <input type="number" min="1" id="peringkat" placeholder="Peringkat" disabled>
+        <input type="number" min="1" id="jumlahSiswa" placeholder="Jumlah Siswa" disabled>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="persentil">Nilai Persentil Rapor</label>
+      <input type="text" id="persentil" placeholder="—" readonly>
+      <small class="hint" id="persentilHint"></small>
+    </div>
+
+    <div class="field">
+      <label for="prestasiAkademik">Prestasi Akademik</label>
+      <select id="prestasiAkademik" disabled>
+        <option value="0">— Tidak Ada —</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="prestasiNon">Prestasi Non-Akademik</label>
+      <select id="prestasiNon" disabled>
+        <option value="0">— Tidak Ada —</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="osis">Kepemimpinan OSIS</label>
+      <select id="osis" disabled>
+        <option value="0">— Tidak Ada —</option>
+        <option value="100">Ketua OSIS</option>
+        <option value="67">Wakil / Sekretaris / Bendahara</option>
+        <option value="33">Ketua Seksi dan Anggota</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="ekskul">Kepemimpinan Ekstrakurikuler</label>
+      <select id="ekskul" disabled>
+        <option value="0">— Tidak Ada —</option>
+        <option value="100">Ketua Ekstrakurikuler</option>
+        <option value="67">Wakil / Sekretaris / Bendahara</option>
+        <option value="33">Ketua Seksi dan Anggota</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="seleksiKetat">Seleksi Ketat (Pramuka / Hafiz)</label>
+      <select id="seleksiKetat" disabled>
+        <option value="0">— Tidak Ada —</option>
+        <optgroup label="Pramuka">
+          <option value="100">(Internasional) Jambore / Pramuka Garuda / Jumbara</option>
+          <option value="67">(Nasional) Jambore / Pramuka Garuda / Jumbara</option>
+          <option value="43">(Provinsi) Jambore / Pramuka Garuda / Jumbara</option>
+          <option value="33">(Kota/Kab) Jambore / Pramuka Garuda / Jumbara</option>
+        </optgroup>
+        <optgroup label="Hafiz">
+          <option value="100">Hafiz 28–30 Juz</option>
+          <option value="94">Hafiz 25–27 Juz</option>
+          <option value="88">Hafiz 22–24 Juz</option>
+          <option value="82">Hafiz 19–21 Juz</option>
+          <option value="76">Hafiz 16–18 Juz</option>
+          <option value="70">Hafiz 13–15 Juz</option>
+          <option value="64">Hafiz 11–12 Juz</option>
+          <option value="58">Hafiz 9–10 Juz</option>
+          <option value="52">Hafiz 7–8 Juz</option>
+          <option value="46">Hafiz 5–6 Juz</option>
+          <option value="40">Hafiz 3–4 Juz</option>
+          <option value="34">Hafiz 1–2 Juz</option>
+        </optgroup>
+      </select>
+    </div>
+  </form>
+
+  <div id="resultGrid" class="result-grid" style="display:none">
+    <div class="card primary">
+      <div class="card-label">Kemampuan Akademik</div>
+      <div class="card-value" id="outKa">—</div>
+      <div class="card-note">Afirmasi Kedua · Domisili · Mutasi · Tahap II</div>
+      <div class="card-formula">Rapor 75% + Persentil 25%</div>
+    </div>
+    <div class="card accent">
+      <div class="card-label">Index Prestasi (Jalur Prestasi)</div>
+      <div class="card-value-sm">
+        Akademik: <strong id="outNaAk">—</strong><br>
+        Non-Akademik: <strong id="outNaNonAk">—</strong>
+      </div>
+      <div class="card-note">Rapor-TKA · Persentil · Prestasi · Kepemimpinan</div>
+    </div>
+  </div>
+  <p id="disclaimer" class="disclaimer" style="display:none">*) Kalkulasi Perkiraan</p>
+</div>
+
+<script>
+const U = {
+  baik:   [{max:15,skor:100},{max:30,skor:90},{max:45,skor:80},{max:60,skor:70},{max:100,skor:60}],
+  sedang: [{max:10,skor:100},{max:20,skor:90},{max:30,skor:80},{max:40,skor:70},{max:100,skor:60}],
+  kurang: [{max:5, skor:100},{max:10,skor:90},{max:15,skor:80},{max:20,skor:70},{max:100,skor:60}]
+};
+
+const J = {
+  "Kota/Kabupaten": {
+    1: { "Kedinasan":{berjenjang:73,tidak_berjenjang:65}, "Induk Organisasi":{berjenjang:65,tidak_berjenjang:56}, "Eksibisi, Undangan, Festival":39 },
+    2: { "Kedinasan":{berjenjang:70,tidak_berjenjang:62}, "Induk Organisasi":{berjenjang:62,tidak_berjenjang:54}, "Eksibisi, Undangan, Festival":36 },
+    3: { "Kedinasan":{berjenjang:67,tidak_berjenjang:59}, "Induk Organisasi":{berjenjang:59,tidak_berjenjang:51}, "Eksibisi, Undangan, Festival":33 }
+  },
+  "Provinsi": {
+    1: { "Kedinasan":{berjenjang:82,tidak_berjenjang:74}, "Induk Organisasi":{berjenjang:74,tidak_berjenjang:66}, "Eksibisi, Undangan, Festival":48 },
+    2: { "Kedinasan":{berjenjang:79,tidak_berjenjang:71}, "Induk Organisasi":{berjenjang:71,tidak_berjenjang:63}, "Eksibisi, Undangan, Festival":45 },
+    3: { "Kedinasan":{berjenjang:76,tidak_berjenjang:68}, "Induk Organisasi":{berjenjang:68,tidak_berjenjang:60}, "Eksibisi, Undangan, Festival":42 }
+  },
+  "Nasional": {
+    1: { "Kedinasan":{berjenjang:91,tidak_berjenjang:83}, "Induk Organisasi":{berjenjang:83,tidak_berjenjang:74}, "Eksibisi, Undangan, Festival":57 },
+    2: { "Kedinasan":{berjenjang:88,tidak_berjenjang:80}, "Induk Organisasi":{berjenjang:80,tidak_berjenjang:72}, "Eksibisi, Undangan, Festival":54 },
+    3: { "Kedinasan":{berjenjang:85,tidak_berjenjang:77}, "Induk Organisasi":{berjenjang:77,tidak_berjenjang:69}, "Eksibisi, Undangan, Festival":51 }
+  },
+  "Internasional": {
+    1: { "Kedinasan":{berjenjang:100,tidak_berjenjang:92}, "Induk Organisasi":{berjenjang:92,tidak_berjenjang:84}, "Eksibisi, Undangan, Festival":66 },
+    2: { "Kedinasan":{berjenjang:97, tidak_berjenjang:89}, "Induk Organisasi":{berjenjang:89,tidak_berjenjang:81}, "Eksibisi, Undangan, Festival":63 },
+    3: { "Kedinasan":{berjenjang:94, tidak_berjenjang:86}, "Induk Organisasi":{berjenjang:86,tidak_berjenjang:78}, "Eksibisi, Undangan, Festival":60 }
+  }
+};
+
+const A = [];
+for (const tk in J) {
+  for (const ju in J[tk]) {
+    const r = J[tk][ju];
+    for (const kat in r) {
+      if (kat === "Eksibisi, Undangan, Festival") {
+        A.push({ label: `Juara ${ju} Tk.${tk} ${kat}`, skor: r[kat] });
+      } else {
+        for (const lvl of ["berjenjang","tidak_berjenjang"]) {
+          const lbl = lvl === "berjenjang" ? "Berjenjang" : "Tidak Berjenjang";
+          A.push({ label: `Juara ${ju} Tk.${tk} ${kat} ${lbl}`, skor: r[kat][lvl] });
+        }
+      }
+    }
+  }
+}
+
+function isiPrestasi(id) {
+  const sel = document.getElementById(id);
+  for (const item of A) {
+    const opt = document.createElement("option");
+    opt.value = item.skor;
+    opt.textContent = item.label;
+    sel.appendChild(opt);
+  }
+}
+isiPrestasi("prestasiAkademik");
+isiPrestasi("prestasiNon");
+
+const $ = (id) => document.getElementById(id);
+const num = (id) => { const v = parseFloat($(id).value); return Number.isFinite(v) ? v : null; };
+const intv = (id) => { const v = parseInt($(id).value, 10); return Number.isFinite(v) ? v : null; };
+
+const dependentInputs = ["rapor","tka","peringkat","jumlahSiswa","prestasiAkademik","prestasiNon","osis","ekskul","seleksiKetat"];
+function toggleFields() {
+  const ada = !!$("raporSekolah").value;
+  for (const id of dependentInputs) $(id).disabled = !ada;
+}
+
+function hitung() {
+  toggleFields();
+
+  const rapor       = $("raporSekolah").value;
+  const rataRapor   = num("rapor");
+  const tka         = num("tka");
+  const peringkat   = intv("peringkat");
+  const jumlah      = intv("jumlahSiswa");
+  const presAk      = parseFloat($("prestasiAkademik").value) || 0;
+  const presNonAk   = parseFloat($("prestasiNon").value) || 0;
+  const osis        = parseFloat($("osis").value) || 0;
+  const ekskul      = parseFloat($("ekskul").value) || 0;
+  const seleksi     = parseFloat($("seleksiKetat").value) || 0;
+
+  let g = null;
+  if (peringkat !== null && jumlah !== null && jumlah >= 1) g = (peringkat / jumlah) * 100;
+
+  let q = 60;
+  if (rapor && g !== null) {
+    const tbl = U[rapor];
+    q = 60;
+    for (const row of tbl) { if (g <= row.max) { q = row.skor; break; } }
+  }
+
+  if (rapor && rataRapor !== null && tka !== null) {
+    const E = 0.7 * rataRapor + 0.3 * tka;
+    $("raporTka").value = `(0.70 × ${rataRapor}) + (0.30 × ${tka}) = ${E.toFixed(2)}`;
+  } else {
+    $("raporTka").value = "";
+  }
+
+  if (rapor && g !== null) {
+    $("persentil").value = `Peringkat (${Math.ceil(g)}%) bobot (${q})`;
+    $("persentilHint").textContent = `Peringkat ${peringkat} dari ${jumlah} siswa → ${g.toFixed(2)}%`;
+  } else {
+    $("persentil").value = "";
+    $("persentilHint").textContent = "";
+  }
+
+  const tampil = !!rapor && rataRapor !== null && g !== null;
+  $("resultGrid").style.display = tampil ? "grid" : "none";
+  $("disclaimer").style.display = tampil ? "block" : "none";
+
+  if (!tampil) return;
+
+  const E = 0.7 * (rataRapor ?? 0) + 0.3 * (tka ?? 0);
+  const Z = 0.4 * osis + 0.2 * ekskul + 0.4 * seleksi;
+  const ka     = 0.75 * (rataRapor ?? 0) + 0.25 * q;
+  const naAk   = 0.4 * E + 0.2 * q + 0.25 * presAk + 0.05 * presNonAk + 0.1 * Z;
+  const naNon  = 0.2 * E + 0.05 * q + 0.05 * presAk + 0.5  * presNonAk + 0.2 * Z;
+
+  $("outKa").textContent = ka.toFixed(2);
+  $("outNaAk").textContent = naAk.toFixed(2);
+  $("outNaNonAk").textContent = naNon.toFixed(2);
+}
+
+["raporSekolah","rapor","tka","peringkat","jumlahSiswa",
+ "prestasiAkademik","prestasiNon","osis","ekskul","seleksiKetat"
+].forEach(id => $(id).addEventListener("input", hitung));
+
+toggleFields();
+</script>
+</body>
+</html>
